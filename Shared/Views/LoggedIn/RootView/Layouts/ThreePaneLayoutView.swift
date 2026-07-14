@@ -15,10 +15,10 @@ struct ThreePaneLayoutView: View {
     
     @EnvironmentObject var appData: AppData
     
-    // MARK: View
+    // MARK: view
     
     var body: some View {
-        NavigationView {
+        NavigationSplitView(sidebar: {
             VStack(alignment: .leading) {
                 List(selection: $appData.selectedTab) {
                     Section("Tabs") {
@@ -29,10 +29,7 @@ struct ThreePaneLayoutView: View {
                             }
                         }
                     }
-                    #if os(OSX)
-                    .collapsible(false)
-                    #endif
-                    
+
                     if let user = appData.user {
                         let userTab = Tabs.User
                         Section(userTab.description) {
@@ -41,33 +38,30 @@ struct ThreePaneLayoutView: View {
                                     .tag(userTab)
                             }
                         }
-                        #if os(OSX)
-                        .collapsible(false)
-                        #endif
                     }
                 }
-                .listStyle(SidebarListStyle())
-                
+                .listStyle(.sidebar)
+
                 SmallAppIconAndVersionView()
                     .padding(.horizontal)
                     .padding(.vertical, 8)
             }
-            .frame(minWidth: .sidebarWidth)
-            
+            .navigationSplitViewColumnWidth(min: .sidebarWidth, ideal: 215.0)
+        }, content: {
             AppHeaderView()
-            
+                .navigationSplitViewColumnWidth(min: .minTabWidth, ideal: 1.25 * .minTabWidth)
+        }, detail: {
             AppHeaderView()
-                .frame(minWidth: .minTabWidth)
-        }.toolbar {
+                .navigationSplitViewColumnWidth(min: .minTabWidth, ideal: 1.25 * .minTabWidth)
+        })
+        .toolbar {
             ProjectSelectionView()
                 .toolbarItem()
         }
         .frame(
-            minWidth: .sidebarWidth + .minTabWidth * 2,
-            maxWidth: .sidebarWidth + .minTabWidth * 2,
             minHeight: 720,
             maxHeight: .infinity,
-            alignment: .leading
+//            alignment: .leading
         )
 //        .frame(width: 1280, height: 748) // Frame for 1280x800 screenshots.
     }
