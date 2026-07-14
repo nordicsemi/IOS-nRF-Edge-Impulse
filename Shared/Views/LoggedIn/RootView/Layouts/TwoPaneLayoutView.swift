@@ -33,6 +33,7 @@ struct TwoPaneLayoutView: View {
                 .setTitle("nRF Edge Impulse")
                 .padding(.top, -4)
             }
+            .setSingleColumnNavigationViewStyle()
             .setupNavBarBackground(with: Assets.navBarBackground.color)
             .frame(width: 215, alignment: .leading)
             
