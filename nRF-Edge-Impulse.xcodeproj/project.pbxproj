@@ -146,6 +146,8 @@
 		AA4E8A7A26947A3600C844FE /* DeploymentViewState+WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4E8A7826947A3600C844FE /* DeploymentViewState+WebSocket.swift */; };
 		AA535510261C7AFC007B2C94 /* CollaboratorRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53550F261C7AFC007B2C94 /* CollaboratorRow.swift */; };
 		AA535511261C7AFC007B2C94 /* CollaboratorRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53550F261C7AFC007B2C94 /* CollaboratorRow.swift */; };
+		AA5563F430064B8500DBE913 /* AddAPIKeyRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5563F330064B8500DBE913 /* AddAPIKeyRequest.swift */; };
+		AA5563F530064B8500DBE913 /* AddAPIKeyRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5563F330064B8500DBE913 /* AddAPIKeyRequest.swift */; };
 		AA605E57271ECF3A002B3B0A /* InferencingFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA605E56271ECF3A002B3B0A /* InferencingFooterView.swift */; };
 		AA605E58271ECF3A002B3B0A /* InferencingFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA605E56271ECF3A002B3B0A /* InferencingFooterView.swift */; };
 		AA63F87026A1AE82001EDE54 /* DeleteDeviceRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA63F86F26A1AE82001EDE54 /* DeleteDeviceRequest.swift */; };
@@ -422,6 +424,7 @@
 		AA4D06F2268F410E00DFB6A9 /* RenameDeviceRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameDeviceRequest.swift; sourceTree = "<group>"; };
 		AA4E8A7826947A3600C844FE /* DeploymentViewState+WebSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DeploymentViewState+WebSocket.swift"; sourceTree = "<group>"; };
 		AA53550F261C7AFC007B2C94 /* CollaboratorRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollaboratorRow.swift; sourceTree = "<group>"; };
+		AA5563F330064B8500DBE913 /* AddAPIKeyRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAPIKeyRequest.swift; sourceTree = "<group>"; };
 		AA605E56271ECF3A002B3B0A /* InferencingFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InferencingFooterView.swift; sourceTree = "<group>"; };
 		AA63F86F26A1AE82001EDE54 /* DeleteDeviceRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteDeviceRequest.swift; sourceTree = "<group>"; };
 		AA727E0F2C6F7D8A00282953 /* ASWebAuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASWebAuthenticationManager.swift; sourceTree = "<group>"; };
@@ -881,6 +884,7 @@
 				AAF0C9682609FEBE001B76B9 /* GetCurrentUserRequest.swift */,
 				AA0BE236283E4987002E5FCB /* DeleteCurrentUserRequest.swift */,
 				AAF5E75B26403BCD00AC3271 /* GetProjectDevelopmentKeysRequest.swift */,
+				AA5563F330064B8500DBE913 /* AddAPIKeyRequest.swift */,
 				AAF5E75526400F7300AC3271 /* GetSamplesRequest.swift */,
 				AAF38C18268E159A00F1A590 /* GetSocketTokenRequest.swift */,
 				01D853EB265CF67100D96592 /* GetDevicesRequest.swift */,
@@ -1298,6 +1302,7 @@
 				AA04577F270208D900FC1A41 /* InferencingView.swift in Sources */,
 				AAFFEB3925FF9554002287D6 /* NordicError.swift in Sources */,
 				AA01DA6026395E6000F6DD44 /* Date.swift in Sources */,
+				AA5563F530064B8500DBE913 /* AddAPIKeyRequest.swift in Sources */,
 				C301A35B261DE9280010717D /* DeviceRemoteHandler.swift in Sources */,
 				AA0BE237283E4987002E5FCB /* DeleteCurrentUserRequest.swift in Sources */,
 				C33C10C12609791E0097EA5A /* SignalParameters.swift in Sources */,
@@ -1588,6 +1593,7 @@
 				AAF7299826298D6D0034B61A /* AppData+LoginState.swift in Sources */,
 				C3A3665A260414BC008D82CC /* UnregisteredDeviceView.swift in Sources */,
 				011D788126BB3CA10035B752 /* TextHeader.swift in Sources */,
+				AA5563F430064B8500DBE913 /* AddAPIKeyRequest.swift in Sources */,
 				C37E5ECA262842AA00B9E361 /* Scanner.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

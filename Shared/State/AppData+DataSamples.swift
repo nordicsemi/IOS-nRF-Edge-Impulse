@@ -60,6 +60,8 @@ extension AppData {
 
 private extension AppData {
     
+    // MARK: requestDataSamples(for:)
+    
     private func requestDataSamples(for category: DataSample.Category) {
         guard let currentProject = selectedProject,
               let projectApiKey = projectDevelopmentKeys[currentProject]?.apiKey,
@@ -77,9 +79,11 @@ private extension AppData {
             .store(in: &cancellables)
     }
     
+    // MARK: requestProjectDevelopmentKeys()
+    
     private func requestProjectDevelopmentKeys() {
-        guard let currentProject = selectedProject, let token = apiToken,
-              let httpRequest = HTTPRequest.getProjectDevelopmentKeys(for: currentProject, using: token) else {
+        guard let selectedProject, let token = apiToken,
+              let httpRequest = HTTPRequest.getProjectDevelopmentKeys(for: selectedProject, using: token) else {
             // TODO: Error
             return
         }
@@ -87,15 +91,52 @@ private extension AppData {
         Network.shared.perform(httpRequest, responseType: ProjectDevelopmentKeysResponse.self)
             .receive(on: RunLoop.main)
             .onUnauthorisedUserError(logout)
-            .sinkOrRaiseAppEventError { [weak self] projectKeysResponse in
-                guard let self = self, let currentProject = self.selectedProject else {
-                    // TODO: No Selected Project Error.
-                    return
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    break // No-op.
+                case .failure:
+                    self?.apiKeyMissing()
                 }
-                self.projectDevelopmentKeys[currentProject] = projectKeysResponse
-                self.requestDataSamples()
-                self.requestSelectedProjectSocketToken()
-            }
+            }, receiveValue: { [weak self] projectKeysResponse in
+                self?.obtainedKeys(projectKeysResponse, for: selectedProject)
+            })
             .store(in: &cancellables)
+    }
+    
+    // MARK: apiKeyMissing
+    
+    private func apiKeyMissing() {
+        guard let selectedProject, let token = apiToken,
+              let addApiKeyRequest = HTTPRequest.addAPIKey(for: selectedProject, using: token),
+              let devKeysRequest = HTTPRequest.getProjectDevelopmentKeys(for: selectedProject, using: token) else {
+            // TODO: Error
+            return
+        }
+        
+        Network.shared.perform(addApiKeyRequest, responseType: AddAPIKeyResponse.self)
+            .receive(on: RunLoop.main)
+            .onUnauthorisedUserError(logout)
+            .tryMap({ addApiKeyResponse in
+                guard addApiKeyResponse.success else {
+                    throw ErrorEvent(title: "Unable to Add Development Key", localizedDescription: "We tried to add a new Development Key because none was present, but this attempt failed.")
+                }
+            })
+            .flatMap({ _ in
+                return Network.shared.perform(devKeysRequest, responseType: ProjectDevelopmentKeysResponse.self)
+            })
+            .receive(on: RunLoop.main)
+            .sinkOrRaiseAppEventError(receiveValue: { [weak self] projectKeysResponse in
+                self?.obtainedKeys(projectKeysResponse, for: selectedProject)
+            })
+            .store(in: &cancellables)
+    }
+    
+    // MARK: obtainedKeys(_:for:)
+    
+    private func obtainedKeys(_ keys: ProjectDevelopmentKeysResponse, for project: Project) {
+        projectDevelopmentKeys[project] = keys
+        requestDataSamples()
+        requestSelectedProjectSocketToken()
     }
 }
