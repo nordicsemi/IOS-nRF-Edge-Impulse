@@ -26,7 +26,7 @@ struct UserContentView: View {
         if let user = appData.user {
             List {
                 Section(header: Text("User")) {
-                    UserView(user: user)
+                    UserView(user)
                         .withTabBarStyle()
                 }
                 
