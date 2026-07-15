@@ -23,9 +23,15 @@ struct ContentView: View {
             LoggedInRootView()
                 .environmentObject(deviceData)
         } else {
-            NativeLoginView()
             #if os(OSX)
-                .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
+            if #available(macOS 15.0, *) {
+                NativeLoginView()
+                    .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
+            } else {
+                NativeLoginView()
+            }
+            #else
+            NativeLoginView()
             #endif
         }
     }
