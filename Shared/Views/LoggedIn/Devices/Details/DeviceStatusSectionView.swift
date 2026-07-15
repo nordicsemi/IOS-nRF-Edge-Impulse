@@ -15,7 +15,7 @@ struct DeviceStatusSectionView: View {
     let state: DeviceData.DeviceWrapper.State
     
     var body: some View {
-        Section(header: Text("Status")) {
+        Section("Status") {
             HStack {
                 switch state {
                 case .notConnectable:

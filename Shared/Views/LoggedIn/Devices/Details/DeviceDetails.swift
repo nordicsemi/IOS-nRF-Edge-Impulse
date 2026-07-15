@@ -20,18 +20,18 @@ struct DeviceDetails: View {
     private let device: Device
     private let state: DeviceData.DeviceWrapper.State
     
-    // MARK: Init
+    // MARK: init
     
     init(device: Device, state: DeviceData.DeviceWrapper.State) {
         self.device = device
         self.state = state
     }
     
-    // MARK: View
+    // MARK: view
     
     var body: some View {
         FormIniOSListInMacOS {
-            Section(header: Text("Device Information")) {
+            Section("Device Information") {
                 #if os(macOS)
                 StringDeviceInfoRow(title: "Name", systemImage: "character", content: device.name)
                 #endif
@@ -51,6 +51,7 @@ struct DeviceDetails: View {
             
             deleteSection()
         }
+        .background(Color.secondarySystemGroupBackground)
         .accentColor(.primary)
         .alert(isPresented: $showingAlert) {
             Alert(title: Text("Delete Device"),
@@ -107,16 +108,19 @@ private extension DeviceDetails {
     }
 }
 
+// MARK: - SensorSection
+
 private struct SensorSection: View {
+    
     let sensor: Sensor
 
     var body: some View {
-        
         Section(header: Label(sensor.name, systemImage: sensor.iconName)) {
-            
             HStack {
                 NordicLabel(title: "Max. Sample Length", systemImage: "stopwatch")
+                
                 Spacer()
+                
                 if let maxSampleLengthSeconds = sensor.maxSampleLengthS {
                     Text("\(maxSampleLengthSeconds, specifier: "%.0d")s").bold()
                         .foregroundColor(.secondary)
