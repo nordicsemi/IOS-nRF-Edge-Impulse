@@ -13,19 +13,19 @@ struct TabBarLayoutView: View {
     
     @EnvironmentObject var appData: AppData
     
-    // MARK: Init
+    // MARK: init
     
     #if os(iOS)
     init() {
         let appearance = UITabBarAppearance()
-        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = UIColor.secondarySystemGroupedBackground
         
         UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
     }
     #endif
     
-    // MARK: View
+    // MARK: view
     
     var body: some View {
         TabView {
@@ -43,7 +43,6 @@ struct TabBarLayoutView: View {
                     .tag(tab.rawValue)
             }
         }
-        .background(Color.formBackground)
         .accentColor(.nordicBlue)
     }
 }
