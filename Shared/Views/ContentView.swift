@@ -7,10 +7,16 @@
 
 import SwiftUI
 
+// MARK: - ContentView
+
 struct ContentView: View {
+    
+    // MARK: Environment
     
     @EnvironmentObject var appData: AppData
     @EnvironmentObject var deviceData: DeviceData
+    
+    // MARK: view
     
     var body: some View {
         if appData.isLoggedIn {
@@ -18,6 +24,9 @@ struct ContentView: View {
                 .environmentObject(deviceData)
         } else {
             NativeLoginView()
+            #if os(OSX)
+                .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
+            #endif
         }
     }
 }
