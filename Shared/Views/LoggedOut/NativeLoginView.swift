@@ -28,10 +28,6 @@ struct NativeLoginView: View {
     @State private var viewState: ViewState = .clean
     @State private var loginCancellable: Cancellable? = nil
     
-    // MARK: - Properties
-    
-    private let textFieldBackground = Color.nordicLightGrey.opacity(0.5)
-    
     // MARK: - FocusedField
     
     @FocusState private var focusedField: Field?
@@ -65,7 +61,7 @@ struct NativeLoginView: View {
                 
                 PasswordField(binding: $password, enabled: !isMakingRequest)
                     .foregroundColor(.textFieldColor)
-                    .modifier(RoundedTextFieldShape(colorScheme == .light ? .nordicLightGrey : .nordicMiddleGrey))
+                    .roundedTextFieldStyle()
                     .padding(.vertical, 8)
                     .focused($focusedField, equals: .password)
                     .submitLabel(.done)

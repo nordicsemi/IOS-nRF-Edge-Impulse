@@ -41,7 +41,7 @@ struct UsernameField: View {
                 .keyboardType(.emailAddress)
             #endif
                 .foregroundColor(.textFieldColor)
-                .modifier(RoundedTextFieldShape(colorScheme == .light ? .nordicLightGrey : .nordicMiddleGrey, hasTextFieldBelow: true))
+                .roundedTextFieldStyle()
                 .disabled(!enabled)
         }
     }
