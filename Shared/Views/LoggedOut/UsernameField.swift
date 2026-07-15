@@ -19,14 +19,14 @@ struct UsernameField: View {
     private var username: Binding<String>
     private var enabled: Bool
     
-    // MARK: Init
+    // MARK: init
     
     init(_ binding: Binding<String>, enabled: Bool) {
         self.username = binding
         self.enabled = enabled
     }
     
-    // MARK: Body
+    // MARK: view
     
     var body: some View {
         HStack(alignment: .lastTextBaseline) {
@@ -34,16 +34,21 @@ struct UsernameField: View {
                 .frame(size: .StandardImageSize)
                 .accentColor(.nordicDarkGrey)
             
-            TextField("Username or E-Mail", text: username)
-                .disableAllAutocorrections()
-                .textContentType(.username)
             #if os(iOS)
+            TextField("Username or E-Mail", text: username)
+                .foregroundColor(.primary)
                 .keyboardType(.emailAddress)
-            #endif
-                .foregroundColor(.textFieldColor)
                 .roundedTextFieldStyle()
-                .disabled(!enabled)
+            #else
+            GroupBox {
+                TextField("Username or E-Mail", text: username)
+                    .foregroundColor(.primary)
+            }
+            #endif
         }
+        .textContentType(.username)
+        .disableAllAutocorrections()
+        .disabled(!enabled)
     }
 }
 

@@ -60,7 +60,7 @@ struct NativeLoginView: View {
                     .accentColor(.nordicDarkGrey)
                 
                 PasswordField(binding: $password, enabled: !isMakingRequest)
-                    .foregroundColor(.textFieldColor)
+                    .foregroundColor(.primary)
                     .roundedTextFieldStyle()
                     .padding(.vertical, 8)
                     .focused($focusedField, equals: .password)
@@ -79,8 +79,10 @@ struct NativeLoginView: View {
                     .frame(size: .StandardImageSize)
                     .accentColor(.nordicDarkGrey)
                 
-                PasswordField(binding: $password, enabled: !isMakingRequest)
-                    .focused($focusedField, equals: .password)
+                GroupBox {
+                    PasswordField(binding: $password, enabled: !isMakingRequest)
+                        .focused($focusedField, equals: .password)
+                }
             }
             .frame(maxWidth: .maxTextFieldWidth)
             .padding(.horizontal, 16)
