@@ -200,7 +200,7 @@ class DeviceData: ObservableObject {
         tryToConnect(scanResult: scanResult)
     }
     
-    //MARK: Name
+    // MARK: Name
     
     func name(for deviceHandler: DeviceRemoteHandler) -> String {
         guard let device = deviceHandler.device else { return "N/A" }

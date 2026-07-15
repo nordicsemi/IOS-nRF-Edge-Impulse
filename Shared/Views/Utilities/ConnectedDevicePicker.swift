@@ -12,9 +12,15 @@ import iOS_Common_Libraries
 
 struct ConnectedDevicePicker<SelectionValue: Hashable>: View {
     
+    // MARK: Environment
+    
     @EnvironmentObject var deviceData: DeviceData
     
-    var selectionBinding: Binding<SelectionValue>
+    // MARK: Properties
+    
+    private var selectionBinding: Binding<SelectionValue>
+    
+    // MARK: init
     
     init(_ selectionBinding: Binding<SelectionValue>) {
         self.selectionBinding = selectionBinding
@@ -28,22 +34,22 @@ extension ConnectedDevicePicker {
     
     @ViewBuilder
     var body: some View {
-        let connectedDevices = deviceData.allConnectedAndReadyToUseDevices()
-        if connectedDevices.hasItems {
-            Picker("Selected", selection: selectionBinding) {
-                ForEach(connectedDevices, id: \.self) { handler in
-                    Text(deviceData.name(for: handler))
-                        .lineLimit(1)
-                        .tag(handler.device)
-                }
+        let connectedDevices = deviceData
+            .allConnectedAndReadyToUseDevices()
+            .compactMap(\.device)
+        
+        Picker("Selected", selection: selectionBinding) {
+            Text("--")
+                .tag(Constant.unselectedDevice)
+            
+            ForEach(connectedDevices, id: \.self) { device in
+                Text(deviceData.name(for: device))
+                    .lineLimit(1)
+                    .tag(device)
             }
-            .accentColor(.universalAccentColor)
-            .pickerStyle(.menu)
-        } else {
-            Text("No Connected Devices")
-                .foregroundColor(.nordicMiddleGrey)
-                .multilineTextAlignment(.leading)
         }
+        .accentColor(.universalAccentColor)
+        .pickerStyle(.menu)
     }
 }
 #endif
@@ -57,16 +63,19 @@ extension ConnectedDevicePicker {
     var body: some View {
         MultiColumnView {
             Text("Connected Device")
+            
+            let connectedDevices = deviceData
+                .allConnectedAndReadyToUseDevices()
+                .compactMap(\.device)
+            
             Picker(selection: selectionBinding, label: EmptyView()) {
-                let connectedDevices = deviceData.allConnectedAndReadyToUseDevices().compactMap({ $0.device })
-                if connectedDevices.hasItems {
-                    ForEach(connectedDevices) { device in
-                        Text(device.name)
-                            .tag(device)
-                    }
-                } else {
-                    Text("--")
-                        .tag(Constant.unselectedDevice)
+                Text("--")
+                    .tag(Constant.unselectedDevice)
+                
+                ForEach(connectedDevices, id: \.self) { device in
+                    Text(deviceData.name(for: device))
+                        .lineLimit(1)
+                        .tag(device)
                 }
             }
         }

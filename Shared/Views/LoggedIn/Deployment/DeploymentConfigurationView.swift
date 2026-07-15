@@ -21,7 +21,7 @@ struct DeploymentConfigurationView: View {
     
     var body: some View {
         Section("Device") {
-            ConnectedDevicePicker($viewState.selectedDeviceHandler)
+            ConnectedDevicePicker($viewState.selectedDevice)
                 .onAppear(perform: selectFirstAvailableDeviceHandler)
         }
         
