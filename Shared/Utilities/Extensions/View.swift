@@ -57,19 +57,3 @@ extension View {
         }
     }
 }
-
-#if DEBUG
-struct Landscape<Content>: View where Content: View {
-    let content: () -> Content
-    
-    var body: some View {
-        #if os(iOS)
-        let screenHeight = UIScreen.main.bounds.width
-        let screenWidth = UIScreen.main.bounds.height
-        content().previewLayout(PreviewLayout.fixed(width: screenWidth, height: screenHeight))
-        #else
-        content()
-        #endif
-    }
-}
-#endif
