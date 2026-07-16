@@ -12,11 +12,13 @@ import iOS_Common_Libraries
 
 struct DataAcquisitionView: View {
     
+    // MARK: Environment
+    
     @EnvironmentObject var appData: AppData
     @EnvironmentObject var dataAcquisitionViewState: DataAcquisitionViewState
     @EnvironmentObject var deviceData: DeviceData
     
-    // MARK: - State
+    // MARK: Private Properties
     
     private enum Field: Int, Hashable {
         case label
@@ -25,7 +27,7 @@ struct DataAcquisitionView: View {
     @FocusState private var focusedField: Field?
     @State private var keyboardShownOnce = false
     
-    // MARK: - View (iOS Only)
+    // MARK: view (iOS Only)
     
     var body: some View {
         FormIniOSListInMacOS {
@@ -65,6 +67,7 @@ struct DataAcquisitionView: View {
                 }
                 
                 InlinePicker(title: "Sensor", selectedValue: $dataAcquisitionViewState.selectedSensor, possibleValues: dataAcquisitionViewState.selectedDevice.sensors)
+                    .accentColor(.universalAccentColor)
                 
                 DataAcquisitionViewSampleLengthPicker(viewState: dataAcquisitionViewState)
                 
