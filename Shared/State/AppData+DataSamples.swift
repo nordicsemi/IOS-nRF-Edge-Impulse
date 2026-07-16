@@ -27,6 +27,7 @@ extension AppData {
         
         Network.shared.perform(startRequest, responseType: StartSamplingResponse.self)
             .onUnauthorisedUserError(logout)
+            .receive(on: RunLoop.main)
             .sink(receiveCompletion: { result in
                 switch result {
                 case .failure(let error):
