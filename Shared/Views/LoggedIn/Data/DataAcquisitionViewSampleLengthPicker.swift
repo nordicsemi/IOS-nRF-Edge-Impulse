@@ -31,12 +31,12 @@ struct DataAcquisitionViewSampleLengthPicker: View {
                     
                     HStack {
                         #if os(iOS)
-                        Text("Text Input")
+                        Text("Sample Length")
                             .frame(height: 40)
                         Spacer()
                         #endif
                         
-                        TextField("AA", text: Binding(
+                        TextField("Type Sample Length here", text: Binding(
                             get: {
                                 String(format: "%.0f", viewState.sampleLengthS)
                             },
