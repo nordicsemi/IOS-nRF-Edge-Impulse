@@ -8,9 +8,19 @@
 import SwiftUI
 import iOS_Common_Libraries
 
+// MARK: - DataAcquisitionViewSampleLengthPicker
+
 struct DataAcquisitionViewSampleLengthPicker: View {
     
+    // MARK: Constant
+    
+    private static let sampleLengthWarningThreshold: Double = 180.0
+    
+    // MARK: Properties
+    
     @ObservedObject var viewState: DataAcquisitionViewState
+    
+    // MARK: view
     
     var body: some View {
         ZStack {
@@ -53,6 +63,12 @@ struct DataAcquisitionViewSampleLengthPicker: View {
                         #if os(iOS)
                         .keyboardType(.numberPad)
                         #endif
+                    }
+                    
+                    if viewState.sampleLengthS > Self.sampleLengthWarningThreshold {
+                        Label("Very long Sampling Time", systemImage: "exclamationmark.triangle")
+                            .symbolRenderingMode(.multicolor)
+                            .font(.callout)
                     }
                 }
             } else {
