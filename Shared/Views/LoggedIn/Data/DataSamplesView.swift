@@ -16,7 +16,13 @@ struct DataSamplesView: View {
     
     @State private var showDataAcquisitionView = false
     
-    // MARK: View
+    #if os(OSX)
+    private static let toolbarItemPlacement: ToolbarItemPlacement = .secondaryAction
+    #else
+    private static let toolbarItemPlacement: ToolbarItemPlacement = .primaryAction
+    #endif
+    
+    // MARK: view
     
     static let Columns = [
         GridItem(.fixed(40)),
@@ -57,7 +63,9 @@ struct DataSamplesView: View {
         .padding(.vertical)
         .background(Color.formBackground)
         .toolbar {
-            dataAcquisitionToolbarItem()
+            ToolbarItem(placement: Self.toolbarItemPlacement) {
+                dataAcquisitionToolbarItem()
+            }
         }
     }
 }
