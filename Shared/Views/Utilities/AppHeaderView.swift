@@ -7,21 +7,26 @@
 
 import SwiftUI
 
+// MARK: - AppHeaderView
+
 struct AppHeaderView: View {
     
-    @Environment(\.colorScheme) var colorScheme
+    // MARK: Environment
+    
+    @Environment(\.colorScheme) private var colorScheme
+    
+    // MARK: Private Properties
     
     private let renderingMode: Image.TemplateRenderingMode
-    
     private let templateColor = Color.white
     
-    // MARK: Init
+    // MARK: init
     
     init(_ mode: Image.TemplateRenderingMode = .original) {
         renderingMode = mode
     }
     
-    // MARK: body
+    // MARK: view
     
     var body: some View {
         HStack(alignment: .center, spacing: 8) {
@@ -46,18 +51,3 @@ struct AppHeaderView: View {
         }
     }
 }
-
-// MARK: - Preview
-
-#if DEBUG
-struct AppHeaderView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            AppHeaderView(.original)
-            AppHeaderView(.template)
-        }
-        .background(Color.black)
-        .previewLayout(.sizeThatFits)
-    }
-}
-#endif
