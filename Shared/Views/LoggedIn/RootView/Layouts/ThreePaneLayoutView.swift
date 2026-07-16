@@ -20,7 +20,7 @@ struct ThreePaneLayoutView: View {
     var body: some View {
         NavigationSplitView(sidebar: {
             VStack(alignment: .leading) {
-                List(selection: $appData.selectedTab) {
+                List {
                     Section("Tabs") {
                         ForEach(Tabs.availableCases) { tab in
                             NavigationLink(destination: tab.view(with: appData)) {
