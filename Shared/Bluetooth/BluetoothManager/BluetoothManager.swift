@@ -221,11 +221,7 @@ extension BluetoothManager: CBPeripheralDelegate {
             return
         }
         
-        if let validUTF8String = String(data: bytesReceived, encoding: .utf8) {
-            logger.debug("Received new data: \(validUTF8String) (\(bytesReceived.hexEncodedString()))")
-        } else {
-            logger.debug("Received Data couldn't be parsed as String.")
-        }
+        logger.debug("Received \(ByteCountFormatter.string(fromByteCount: Int64(bytesReceived.count), countStyle: .memory))")
         received(bytesReceived)
     }
 }
