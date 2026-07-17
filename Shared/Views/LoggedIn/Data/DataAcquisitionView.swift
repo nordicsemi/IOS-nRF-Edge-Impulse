@@ -79,7 +79,7 @@ struct DataAcquisitionView: View {
             }
             .disabled(dataAcquisitionViewState.isSampling)
             
-            Section(header: Text("Progress").bold()) {
+            Section("Progress") {
                 ReusableProgressView(progress: $dataAcquisitionViewState.progress, isIndeterminate: $dataAcquisitionViewState.indeterminateProgress, statusText: $dataAcquisitionViewState.progressString, statusColor: $dataAcquisitionViewState.progressColor, buttonText: "Start Sampling", buttonEnabled: $dataAcquisitionViewState.samplingButtonEnable, buttonAction: startSampling)
             }
         }
