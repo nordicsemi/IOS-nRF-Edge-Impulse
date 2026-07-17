@@ -35,11 +35,13 @@ extension BluetoothManager {
     static let rxCharacteristicId = CBUUID(string: "E2A00002-EC31-4EC3-A97A-1C34D87E9878")
 }
 
+// MARK: - BluetoothManager
+
 /// `BluetoothManager` is responsible for connection and managing peripheral connection
 /// Each `BluetoothManager` can handle only one peripheral
 final class BluetoothManager: NSObject, ObservableObject {
     
-    // MARK: - Private Properties
+    // MARK: Private Properties
     
     private let centralManager: CBCentralManager
     
@@ -64,6 +66,8 @@ final class BluetoothManager: NSObject, ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     
+    // MARK: init
+    
     init(peripheralId: UUID) {
         self.centralManager = CBCentralManager()
         self.pId = peripheralId
@@ -73,7 +77,7 @@ final class BluetoothManager: NSObject, ObservableObject {
         transmissionSubject
             .map { [weak self] data -> [Data] in
                 self?.logger.debug("Write total: \(data.count) bytes")
-                guard let self = self,
+                guard let self,
                       let mtuSize = self.peripheral?.maximumWriteValueLength(for: .withoutResponse) else { return [] }
                 
                 guard data.count > mtuSize else {
@@ -96,8 +100,8 @@ final class BluetoothManager: NSObject, ObservableObject {
             .flatMap { _ -> AnyPublisher<State, Swift.Error> in
                 do {
                     try self.tryToConnect()
-                } catch let e {
-                    return Fail(error: e)
+                } catch {
+                    return Fail(error: error)
                         .eraseToAnyPublisher()
                 }
                 return self.$state.setFailureType(to: Swift.Error.self)
@@ -119,7 +123,7 @@ final class BluetoothManager: NSObject, ObservableObject {
     
     func sendUpgradeFirmware(_ firmware: McuMgrPackage, logDelegate: McuMgrLogDelegate,
                              firmwareDelegate: FirmwareUpgradeDelegate) throws {
-        guard let peripheral = peripheral else {
+        guard let peripheral else {
             throw DeviceRemoteHandler.Error.stringError("Peripheral is not available (i.e. 'nil')")
         }
         
@@ -129,12 +133,13 @@ final class BluetoothManager: NSObject, ObservableObject {
         dfuManager.logDelegate = logDelegate
 
         // Start the firmware upgrade with the image data
-        let pipelinedConfiguration = FirmwareUpgradeConfiguration(pipelineDepth: 3, byteAlignment: .fourByte)
+        let pipelinedConfiguration = FirmwareUpgradeConfiguration(pipelineDepth: 3,
+                                                                  byteAlignment: .fourByte)
         dfuManager.start(package: firmware, using: pipelinedConfiguration)
     }
     
     func disconnect() {
-        guard let peripheral = peripheral else {
+        guard let peripheral else {
             logger.debug("Peripheral for Device \(self.pId.uuidString) is nil.")
             return
         }
@@ -158,11 +163,13 @@ final class BluetoothManager: NSObject, ObservableObject {
     }
 }
 
+// MARK: - CBPeripheralDelegate
+
 extension BluetoothManager: CBPeripheralDelegate {
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Swift.Error?) {
-        if let e = error {
-            logger.error("Failed to dicover services. Error: \(e.localizedDescription)")
+        if let error {
+            logger.error("Failed to dicover services. Error: \(error.localizedDescription)")
             return
         }
         
@@ -176,8 +183,8 @@ extension BluetoothManager: CBPeripheralDelegate {
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Swift.Error?) {
         
-        if let e = error {
-            logger.error("Failed to discover characteristic. Error: \(e.localizedDescription)")
+        if let error {
+            logger.error("Failed to discover characteristic. Error: \(error.localizedDescription)")
         }
         
         service.characteristics?.forEach {
@@ -203,15 +210,15 @@ extension BluetoothManager: CBPeripheralDelegate {
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Swift.Error?) {
         logger.info("Notification status has been updated: \(characteristic.isNotifying) for characteristic: \(characteristic)")
-        if let e = error {
-            logger.error("Error: \(e.localizedDescription)")
+        if let error {
+            logger.error("Error: \(error.localizedDescription)")
         }
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Swift.Error?) {
-        if let e = error {
+        if let error {
             logger.warning("Updating characteristic has failed")
-            logger.error("\(e.localizedDescription)")
+            logger.error("\(error.localizedDescription)")
             return
         }
         
@@ -226,7 +233,10 @@ extension BluetoothManager: CBPeripheralDelegate {
     }
 }
 
+// MARK: - CBCentralManagerDelegate
+
 extension BluetoothManager: CBCentralManagerDelegate {
+    
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         logger.info("Central Manager state changed to \(central.state)")
         btStateSubject.send(central.state)
@@ -255,8 +265,8 @@ extension BluetoothManager: CBCentralManagerDelegate {
         state = .disconnected
         disconnect()
         
-        if let e = error {
-            btStateSubject.send(completion: .failure(e))
+        if let error {
+            btStateSubject.send(completion: .failure(error))
         } else {
             btStateSubject.send(completion: .finished)
         }
