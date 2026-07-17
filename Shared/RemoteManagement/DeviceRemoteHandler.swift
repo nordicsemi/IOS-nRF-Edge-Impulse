@@ -71,7 +71,7 @@ final class DeviceRemoteHandler {
     
     private static let RemoteManagementURLString = "wss://remote-mgmt.edgeimpulse.com"
     
-    private let logger = Logger(category: "DeviceRemoteHandler")
+    internal let logger = Logger(category: "DeviceRemoteHandler")
     
     private(set) var scanResult: ScanResult
     private(set) var device: Device?

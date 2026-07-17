@@ -71,7 +71,7 @@ extension DeviceRemoteHandler {
                 let encoder = JSONEncoder()
                 encoder.outputFormatting = .withoutEscapingSlashes
                 if let jsonData = try? encoder.encode(response), let jsonText = String(data: jsonData, encoding: .utf8) {
-                    print("Full Response: \(jsonText)")
+                    self?.logger.debug("Full Response: \(jsonText)")
                 }
                 #endif
                 
