@@ -57,6 +57,10 @@ struct DataSamplesView: View {
             }
             #if os(macOS)
             .background(Color.secondarySystemBackground)
+            #else
+            .refreshable {
+                appData.requestDataSamples()
+            }
             #endif
             addHiddenDataAcquisitionNavigationLink()
         }
