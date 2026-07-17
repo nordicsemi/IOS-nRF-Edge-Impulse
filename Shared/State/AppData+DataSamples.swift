@@ -46,11 +46,18 @@ extension AppData {
         guard let uploadRequest = HTTPRequest.uploadSample(headers, body: body, name: sampleName, category: category) else { return }
         Network.shared.perform(uploadRequest)
             .onUnauthorisedUserError(logout)
-            .compactMap { String(data: $0, encoding: .utf8) }
+            .tryMap { (response: NetworkResponse) -> String in
+                // If we get NetworkResponse it's usually "OK" HTTP StatusCode.
+                // See Network.shared.perform() implementation.
+                guard let stringResponse = String(data: response.data, encoding: .utf8) else {
+                    throw DeviceRemoteHandler.Error.stringError("Unable to parse String response from Upload Sample API.")
+                }
+                return stringResponse
+            }
             .sinkReceivingError(onError: { error in
                 subject.send(completion: .failure(DeviceRemoteHandler.Error.stringError(error.localizedDescription)))
-            }, receiveValue: { response in
-                subject.send(response)
+            }, receiveValue: { stringResponse in
+                subject.send(stringResponse)
                 subject.send(completion: .finished)
             })
             .store(in: &cancellables)
