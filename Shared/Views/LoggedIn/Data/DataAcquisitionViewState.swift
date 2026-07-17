@@ -46,7 +46,7 @@ final class DataAcquisitionViewState: ObservableObject {
     private lazy var timerCancellables = Set<AnyCancellable>()
     private lazy var logger = Logger(Self.self)
     
-    // MARK: Init
+    // MARK: init
     
     init() {
         Publishers.CombineLatest3($label.map { $0.isEmpty },
@@ -84,6 +84,8 @@ final class DataAcquisitionViewState: ObservableObject {
     func samplingEncounteredAnError(_ errorDescription: String) {
         stopCountdownTimer()
         isSampling = false
+        indeterminateProgress = false
+        progress = 0.0
         progressColor = .nordicRed
         progressString = errorDescription
     }
