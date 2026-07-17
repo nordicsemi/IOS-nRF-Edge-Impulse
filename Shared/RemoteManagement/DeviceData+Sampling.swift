@@ -28,43 +28,48 @@ extension DeviceData {
                     break
                 }
             }) { [unowned self] state in
-                self.appData.dataAquisitionViewState.progressString = deviceHandler.samplingState.userDescription
+                appData.dataAquisitionViewState.progressString = deviceHandler.samplingState.userDescription
                 switch deviceHandler.samplingState {
                 case .requestReceived:
-                    self.appData.dataAquisitionViewState.indeterminateProgress = true
+                    logger.debug("Sampling Request received.")
+                    appData.dataAquisitionViewState.indeterminateProgress = true
                 case .requestStarted:
-                    self.appData.dataAquisitionViewState.indeterminateProgress = false
-                    self.appData.dataAquisitionViewState.progress = 0.0
-                    self.appData.dataAquisitionViewState.startCountdownTimer()
+                    logger.debug("Sampling Request started.")
+                    appData.dataAquisitionViewState.indeterminateProgress = false
+                    appData.dataAquisitionViewState.progress = 0.0
+                    appData.dataAquisitionViewState.startCountdownTimer()
                 case .receivingFromFirmware:
-                    self.appData.dataAquisitionViewState.stopCountdownTimer()
-                    self.appData.dataAquisitionViewState.progress = 100.0
-                    self.appData.dataAquisitionViewState.indeterminateProgress = true
-                    self.appData.dataAquisitionViewState.progressColor = .nordicBlue
+                    logger.debug("Receiving Sampling Data...")
+                    appData.dataAquisitionViewState.stopCountdownTimer()
+                    appData.dataAquisitionViewState.progress = 100.0
+                    appData.dataAquisitionViewState.indeterminateProgress = true
+                    appData.dataAquisitionViewState.progressColor = .nordicBlue
                 case .completed:
-                    self.appData.dataAquisitionViewState.stopCountdownTimer()
-                    self.appData.dataAquisitionViewState.progress = 100.0
-                    self.appData.dataAquisitionViewState.indeterminateProgress = false
-                    self.appData.dataAquisitionViewState.isSampling = false
-                    self.appData.dataAquisitionViewState.progressColor = .green
-                    self.logger.debug("Sample Uploaded Successfully. Triggering Request for new Samples.")
-                    self.appData.requestDataSamples()
-                    guard let cancellable = dataSamplingCancellable else { return }
-                    self.cancellables.remove(cancellable)
+                    appData.dataAquisitionViewState.stopCountdownTimer()
+                    appData.dataAquisitionViewState.progress = 100.0
+                    appData.dataAquisitionViewState.indeterminateProgress = false
+                    appData.dataAquisitionViewState.isSampling = false
+                    appData.dataAquisitionViewState.progressColor = .green
+                    
+                    logger.debug("Sample Uploaded Successfully. Triggering Request for new Samples.")
+                    appData.requestDataSamples()
+                    
+                    guard let dataSamplingCancellable else { return }
+                    cancellables.remove(dataSamplingCancellable)
                 default:
                     break
                 }
             }
         cancellables.insert(dataSamplingCancellable)
         
-        self.appData.dataAquisitionViewState.isSampling = true
-        self.appData.dataAquisitionViewState.progress = 0.0
+        appData.dataAquisitionViewState.isSampling = true
+        appData.dataAquisitionViewState.progress = 0.0
         do {
-            self.appData.dataAquisitionViewState.progressString = "Sending Sample Request to Device..."
+            appData.dataAquisitionViewState.progressString = "Sending Sample Request to Device..."
             try deviceHandler.sendSampleRequestToBLEFirmware(request)
         }
         catch (let error) {
-            self.appData.dataAquisitionViewState.samplingEncounteredAnError(error.localizedDescription)
+            appData.dataAquisitionViewState.samplingEncounteredAnError(error.localizedDescription)
             AppEvents.shared.error = ErrorEvent(error)
         }
     }
