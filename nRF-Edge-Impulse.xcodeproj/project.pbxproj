@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -148,6 +148,8 @@
 		AA535511261C7AFC007B2C94 /* CollaboratorRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53550F261C7AFC007B2C94 /* CollaboratorRow.swift */; };
 		AA5563F430064B8500DBE913 /* AddAPIKeyRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5563F330064B8500DBE913 /* AddAPIKeyRequest.swift */; };
 		AA5563F530064B8500DBE913 /* AddAPIKeyRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5563F330064B8500DBE913 /* AddAPIKeyRequest.swift */; };
+		AA579CCE300A375A00AE864D /* iOSCommonLibraries in Frameworks */ = {isa = PBXBuildFile; productRef = AA579CCD300A375A00AE864D /* iOSCommonLibraries */; };
+		AA579CD0300A377400AE864D /* iOSCommonLibraries in Frameworks */ = {isa = PBXBuildFile; productRef = AA579CCF300A377400AE864D /* iOSCommonLibraries */; };
 		AA605E57271ECF3A002B3B0A /* InferencingFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA605E56271ECF3A002B3B0A /* InferencingFooterView.swift */; };
 		AA605E58271ECF3A002B3B0A /* InferencingFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA605E56271ECF3A002B3B0A /* InferencingFooterView.swift */; };
 		AA63F87026A1AE82001EDE54 /* DeleteDeviceRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA63F86F26A1AE82001EDE54 /* DeleteDeviceRequest.swift */; };
@@ -163,8 +165,6 @@
 		AA798185275A223F008BDAC3 /* NoRegisteredDevicesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA798183275A223F008BDAC3 /* NoRegisteredDevicesView.swift */; };
 		AA79818B275A5170008BDAC3 /* AppData+Rename.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA79818A275A5170008BDAC3 /* AppData+Rename.swift */; };
 		AA79818C275A5170008BDAC3 /* AppData+Rename.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA79818A275A5170008BDAC3 /* AppData+Rename.swift */; };
-		AA7C0A462F83BB61000C3151 /* iOSCommonLibraries in Frameworks */ = {isa = PBXBuildFile; productRef = AA7C0A452F83BB61000C3151 /* iOSCommonLibraries */; };
-		AA7C0A482F83BB86000C3151 /* iOSCommonLibraries in Frameworks */ = {isa = PBXBuildFile; productRef = AA7C0A472F83BB86000C3151 /* iOSCommonLibraries */; };
 		AA7E6659274BC66200B8CE12 /* DeploymentErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7E6658274BC66200B8CE12 /* DeploymentErrorView.swift */; };
 		AA7E665A274BC66200B8CE12 /* DeploymentErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7E6658274BC66200B8CE12 /* DeploymentErrorView.swift */; };
 		AA7F5DE325F8F57D00185328 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = AA7F5DE225F8F57D00185328 /* KeychainSwift */; };
@@ -536,7 +536,7 @@
 				AAFAE5E525ED11CA00A45A90 /* KeychainSwift in Frameworks */,
 				AA01902826BA938F00B70E85 /* Algorithms in Frameworks */,
 				AA2A1127283D007A00A35029 /* iOSMcuManagerLibrary in Frameworks */,
-				AA7C0A462F83BB61000C3151 /* iOSCommonLibraries in Frameworks */,
+				AA579CCE300A375A00AE864D /* iOSCommonLibraries in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,7 +547,7 @@
 				AA7F5DE325F8F57D00185328 /* KeychainSwift in Frameworks */,
 				AA01902A26BA939700B70E85 /* Algorithms in Frameworks */,
 				AA2A1129283D00E300A35029 /* iOSMcuManagerLibrary in Frameworks */,
-				AA7C0A482F83BB86000C3151 /* iOSCommonLibraries in Frameworks */,
+				AA579CD0300A377400AE864D /* iOSCommonLibraries in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1120,7 +1120,7 @@
 				AAFAE5E425ED11CA00A45A90 /* KeychainSwift */,
 				AA01902726BA938F00B70E85 /* Algorithms */,
 				AA2A1126283D007A00A35029 /* iOSMcuManagerLibrary */,
-				AA7C0A452F83BB61000C3151 /* iOSCommonLibraries */,
+				AA579CCD300A375A00AE864D /* iOSCommonLibraries */,
 			);
 			productName = "nRF-Edge-Impulse (iOS)";
 			productReference = AA03E96025E3EF13003DA9DA /* nRF Edge Impulse.app */;
@@ -1144,7 +1144,7 @@
 				AA7F5DE225F8F57D00185328 /* KeychainSwift */,
 				AA01902926BA939700B70E85 /* Algorithms */,
 				AA2A1128283D00E300A35029 /* iOSMcuManagerLibrary */,
-				AA7C0A472F83BB86000C3151 /* iOSCommonLibraries */,
+				AA579CCF300A377400AE864D /* iOSCommonLibraries */,
 			);
 			productName = "nRF-Edge-Impulse (macOS)";
 			productReference = AA03E96825E3EF13003DA9DA /* nRF Edge Impulse.app */;
@@ -1184,7 +1184,7 @@
 				AAFAE5E325ED11CA00A45A90 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				AA01902626BA938F00B70E85 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
 				AAA496D82795902D00D77BD1 /* XCRemoteSwiftPackageReference "IOS-nRF-Connect-Device-Manager" */,
-				AA7C0A442F83BB61000C3151 /* XCRemoteSwiftPackageReference "IOS-Common-Libraries" */,
+				AA579CCC300A375A00AE864D /* XCLocalSwiftPackageReference "../IOS-Common-Libraries" */,
 			);
 			productRefGroup = AA03E96125E3EF13003DA9DA /* Products */;
 			projectDirPath = "";
@@ -1926,6 +1926,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		AA579CCC300A375A00AE864D /* XCLocalSwiftPackageReference "../IOS-Common-Libraries" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../IOS-Common-Libraries";
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		AA01902626BA938F00B70E85 /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -1933,14 +1940,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.2.1;
-			};
-		};
-		AA7C0A442F83BB61000C3151 /* XCRemoteSwiftPackageReference "IOS-Common-Libraries" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/nordicsemi/IOS-Common-Libraries";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.2.2;
 			};
 		};
 		AAA496D82795902D00D77BD1 /* XCRemoteSwiftPackageReference "IOS-nRF-Connect-Device-Manager" */ = {
@@ -1982,14 +1981,13 @@
 			package = AAA496D82795902D00D77BD1 /* XCRemoteSwiftPackageReference "IOS-nRF-Connect-Device-Manager" */;
 			productName = iOSMcuManagerLibrary;
 		};
-		AA7C0A452F83BB61000C3151 /* iOSCommonLibraries */ = {
+		AA579CCD300A375A00AE864D /* iOSCommonLibraries */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = AA7C0A442F83BB61000C3151 /* XCRemoteSwiftPackageReference "IOS-Common-Libraries" */;
 			productName = iOSCommonLibraries;
 		};
-		AA7C0A472F83BB86000C3151 /* iOSCommonLibraries */ = {
+		AA579CCF300A377400AE864D /* iOSCommonLibraries */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = AA7C0A442F83BB61000C3151 /* XCRemoteSwiftPackageReference "IOS-Common-Libraries" */;
+			package = AA579CCC300A375A00AE864D /* XCLocalSwiftPackageReference "../IOS-Common-Libraries" */;
 			productName = iOSCommonLibraries;
 		};
 		AA7F5DE225F8F57D00185328 /* KeychainSwift */ = {
