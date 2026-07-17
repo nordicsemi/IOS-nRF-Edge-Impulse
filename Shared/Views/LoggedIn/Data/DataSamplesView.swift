@@ -47,24 +47,22 @@ struct DataSamplesView: View {
             #endif
             
             List {
-                DataSampleHeaderRow()
-                
-                ForEach(appData.samplesForCategory[appData.selectedCategory] ?? []) { sample in
-                    DataSampleRow(sample)
+                Section("Data Samples") {
+                    DataSampleHeaderRow()
+                    
+                    ForEach(appData.samplesForCategory[appData.selectedCategory] ?? []) { sample in
+                        DataSampleRow(sample)
+                    }
+                    
+                    DataSamplesFooterView(selectedCategory: appData.selectedCategory)
                 }
-                
-                DataSamplesFooterView(selectedCategory: appData.selectedCategory)
             }
-            #if os(macOS)
-            .background(Color.secondarySystemBackground)
-            #else
-            .refreshable {
-                appData.requestDataSamples()
-            }
+            #if os(iOS)
+            .refreshable { appData.requestDataSamples() }
             #endif
             addHiddenDataAcquisitionNavigationLink()
         }
-        .padding(.vertical)
+        .padding(.top)
         .background(Color.formBackground)
         .toolbar {
             ToolbarItem(placement: Self.toolbarItemPlacement) {
