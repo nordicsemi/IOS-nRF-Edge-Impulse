@@ -22,14 +22,16 @@ struct DataSamplesView: View {
     private static let toolbarItemPlacement: ToolbarItemPlacement = .primaryAction
     #endif
     
-    // MARK: view
+    // MARK: Colums
     
     static let Columns = [
         GridItem(.fixed(40)),
-        GridItem(.flexible()),
         GridItem(.fixed(90)),
+        GridItem(.flexible()),
         GridItem(.fixed(55))
     ]
+    
+    // MARK: view
     
     var body: some View {
         VStack {
@@ -79,13 +81,15 @@ struct DataSampleHeaderRow: View {
     var body: some View {
         MultiColumnView(columns: DataSamplesView.Columns) {
             Text("")
-            Text("Filename")
-                .bold()
+            
             Text("Label")
-                .foregroundColor(.nordicMiddleGrey)
+            
+            Text("Filename")
+                .foregroundStyle(.secondary)
+            
             Text("Length")
-                .fontWeight(.light)
         }
+        .bold()
         .lineLimit(1)
     }
 }

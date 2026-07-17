@@ -7,11 +7,15 @@
 
 import SwiftUI
 
+// MARK: - DataSampleRow
+
 struct DataSampleRow: View {
+    
+    // MARK: Private
     
     private let sample: DataSample
     
-    // MARK: Init
+    // MARK: init
     
     init(_ sample: DataSample) {
         self.sample = sample
@@ -22,10 +26,13 @@ struct DataSampleRow: View {
     var body: some View {
         MultiColumnView(columns: DataSamplesView.Columns) {
             Image(systemName: sample.symbolName)
-            Text(sample.filename)
-                .bold()
+            
             Text(sample.label)
-                .foregroundColor(.nordicMiddleGrey)
+                .fontWeight(.medium)
+            
+            Text(sample.filename)
+                .foregroundColor(.secondary)
+            
             Text(sample.totalLengthInSeconds())
                 .fontWeight(.light)
         }
