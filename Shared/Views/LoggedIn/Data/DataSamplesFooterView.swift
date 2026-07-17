@@ -11,39 +11,24 @@ import SwiftUI
 
 struct DataSamplesFooterView: View {
     
-    // MARK: Properties
+    // MARK: Environment
     
     @EnvironmentObject var appData: AppData
     
+    // MARK: Properties
+    
     let selectedCategory: DataSample.Category
     
-    // MARK: View
+    // MARK: view
     
     var body: some View {
         HStack {
-            Spacer()
-            
             Text("\(appData.samplesForCategory[selectedCategory]?.count ?? 0) \(selectedCategory.rawValue.uppercasingFirst) Samples")
+                .frame(maxWidth: .infinity, alignment: .center)
                 .font(.footnote)
-            
-            Spacer()
+                .italic()
+                .foregroundStyle(.secondary)
         }
         .padding(10)
     }
 }
-
-// MARK: - Preview
-
-#if DEBUG
-import iOS_Common_Libraries
-
-struct DataSamplesFooterView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            DataSamplesFooterView(selectedCategory: .testing)
-                .environmentObject(Preview.projectsPreviewAppData)
-        }
-        .previewLayout(.sizeThatFits)
-    }
-}
-#endif
