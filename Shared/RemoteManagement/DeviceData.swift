@@ -400,22 +400,21 @@ extension DeviceData {
             }
             attachDataSamplingRequestListener(to: handler)
         } else if case .disconnected(let reason) = newState {
-            
-            if let deviceIndex = self.scanResults.firstIndex(of: ScanResultWrapper(scanResult: handler.scanResult)) {
-                scanResults[deviceIndex].state = .notConnected
+            if let i = self.scanResults.firstIndex(of: ScanResultWrapper(scanResult: handler.scanResult)) {
+                scanResults[i].state = .notConnected
             }
             
             if let wrapper = self.associatedRegisteredDevice(with: handler.scanResult),
-               let deviceIndex = self.registeredDevices.firstIndex(of: wrapper) {
-                registeredDevices[deviceIndex].state = .readyToConnect
+               let i = self.registeredDevices.firstIndex(of: wrapper) {
+                registeredDevices[i].state = .readyToConnect
             }
             
             if appData.dataAquisitionViewState.selectedDevice == handler.device {
                 appData.dataAquisitionViewState.deviceDisconnected()
             }
             
-            if case let .error(e) = reason {
-                AppEvents.shared.error = ErrorEvent(e)
+            if case let .error(error) = reason {
+                AppEvents.shared.error = ErrorEvent(error)
             }
             
             guard appData.inferencingViewState.isInferencing,
@@ -449,13 +448,16 @@ extension DeviceData {
                 case .finished:
                     logger.info("Device remote handler Data funnel completed.")
                 case .failure(let error):
+                    guard handler.state.shouldReportErrors else {
+                        logger.debug("Device remote handler is not connected. Ignoring '\(error.localizedDescription)' error.")
+                        return
+                    }
                     logger.error("Device remote handler Data funnel encountered an error: \(error.localizedDescription).")
                     self?.stateChanged(of: handler, newState: .disconnected(.error(NordicError.deviceWebSocketDisconnectedError)))
                 }
             } receiveValue: { [logger, weak self] request in
                 logger.info("Device Remote Handler Received Sample Request for Sensor \(request.sample.sensor) of length \(request.sample.length)ms named \(request.sample.label).")
-                self?.startSampling(BLESampleRequestWrapper(scheme: .wss, host: .EdgeImpulse, message: request),
-                                    for: handler)
+                self?.startSampling(BLESampleRequestWrapper(scheme: .wss, host: .EdgeImpulse, message: request), for: handler)
             }
             .store(in: &cancellables)
     }

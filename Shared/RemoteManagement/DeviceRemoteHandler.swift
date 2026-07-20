@@ -11,6 +11,8 @@ import os
 
 extension DeviceRemoteHandler {
     
+    // MARK: DeviceRemoteHandler.Error
+    
     enum Error: LocalizedError {
         case anyError(Swift.Error)
         case stringError(String)
@@ -32,8 +34,27 @@ extension DeviceRemoteHandler {
         }
     }
     
+    // MARK: DeviceRemoteHandler.ConnectionState
+    
     enum ConnectionState: CustomDebugStringConvertible {
-        case notConnected, connecting(ScanResult), connected(ScanResult, Device), disconnected(DisconnectReason)
+        case notConnected
+        case connecting(ScanResult)
+        case connected(ScanResult, Device)
+        case disconnected(DisconnectReason)
+        
+        var shouldReportErrors: Bool {
+            switch self {
+            case .notConnected:
+                return false
+            case .connecting, .connected:
+                return true
+            case .disconnected(let disconnectReason):
+                guard case .error = disconnectReason else {
+                    return false
+                }
+                return true
+            }
+        }
         
         var debugDescription: String {
             switch self {
@@ -49,8 +70,12 @@ extension DeviceRemoteHandler {
         }
     }
     
+    // MARK: DeviceRemoteHandler.DisconnectReason
+    
     enum DisconnectReason: CustomDebugStringConvertible {
-        case error(Swift.Error), onDemand, dfuReset
+        case error(Swift.Error)
+        case onDemand
+        case dfuReset
         
         var debugDescription: String {
             switch self {
@@ -87,6 +112,8 @@ final class DeviceRemoteHandler {
     private let registeredDeviceManager: RegisteredDevicesManager
     internal let appData: AppData
     
+    // MARK: init
+    
     init(scanResult: ScanResult, device: Device? = nil, registeredDeviceManager: RegisteredDevicesManager = RegisteredDevicesManager(),
          appData: AppData) {
         self.registeredDeviceManager = registeredDeviceManager
@@ -96,6 +123,8 @@ final class DeviceRemoteHandler {
         
         webSocketManager = WebSocketManager()
     }
+    
+    // MARK: deinit
     
     deinit {
         cancellables.forEach { $0.cancel() }
@@ -116,13 +145,15 @@ final class DeviceRemoteHandler {
         return bluetoothManager.connect()
             .drop(while: { $0 != .readyToUse })
             .first()
-            .flatMap { _ in self.bluetoothManager.receptionSubject.gatherData(ofType: ResponseRootObject.self) }
+            .flatMap { _ in
+                self.bluetoothManager.receptionSubject.gatherData(ofType: ResponseRootObject.self)
+            }
             .combineLatest(
                 webSocketManager.connect(to: Self.RemoteManagementURLString, using: pingConfiguration)
                     .drop(while: { $0 != .connected })
             )
             .flatMap { [weak self] (data, _) -> AnyPublisher<Data, Swift.Error> in
-                guard var webSocketHello = data.message, let self = self else {
+                guard var webSocketHello = data.message, let self else {
                     return Fail(error: Error.connectionEstablishFailed)
                         .eraseToAnyPublisher()
                 }
@@ -131,23 +162,24 @@ final class DeviceRemoteHandler {
                 webSocketHello.hello?.deviceId = self.scanResult.id
                 do {
                     try self.webSocketManager.send(webSocketHello)
-                } catch let e {
-                    return Fail(error: e).eraseToAnyPublisher()
+                } catch {
+                    return Fail(error: error)
+                        .eraseToAnyPublisher()
                 }
                 
                 return self.newWebSocketDataPublisher()
             }
             .decode(type: WSHelloResponse.self, decoder: JSONDecoder())
             .flatMap { [registeredDeviceManager] response -> AnyPublisher<Device, Swift.Error> in
-                if let e = response.err {
-                    return Fail(error: Error.stringError(e))
+                if let error = response.err {
+                    return Fail(error: Error.stringError(error))
                         .eraseToAnyPublisher()
                 } else {
                     return registeredDeviceManager.fetchDevice(deviceId: self.scanResult.id, appData: self.appData)
                 }
             }
             .justDoIt { [weak self] device in
-                guard let self = self else { return }
+                guard let self else { return }
                 if let d = self.device, d.deviceId == device.deviceId {
                     return
                 } else {
@@ -156,7 +188,7 @@ final class DeviceRemoteHandler {
                 }
             }
             .tryMap { [weak self] registeredDevice in
-                guard let self = self else {
+                guard let self else {
                     throw DeviceRemoteHandler.Error.connectionEstablishFailed
                 }
                 let bleHello = BLEHelloMessageContainer(message: BLEHelloMessage(hello: true))
@@ -180,8 +212,8 @@ final class DeviceRemoteHandler {
     }
     
     internal func disconnect(reason: DisconnectReason) {
-        bluetoothManager.disconnect()
         webSocketManager.disconnect()
+        bluetoothManager.disconnect()
         
         self.state = .disconnected(reason)
         let deviceName = scanResult.name
