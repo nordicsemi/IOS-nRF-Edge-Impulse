@@ -61,7 +61,7 @@ struct UserContentView: View {
                     
                     MultiColumnView {
                         Button("Delete", action: showDeleteUserAccountAlert)
-                            .foregroundColor(.negativeActionButtonColor)
+                            .foregroundColor(.red)
                         
                         Text(Strings.accountDeletionFooter)
                             .foregroundColor(.nordicMiddleGrey)

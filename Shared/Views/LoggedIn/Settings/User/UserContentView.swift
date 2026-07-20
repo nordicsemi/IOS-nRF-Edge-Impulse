@@ -58,7 +58,7 @@ struct UserContentView: View {
                 Section(content: {
                     Button("Delete", action: showDeleteUserAccountAlert)
                         .frame(maxWidth: .infinity, alignment: .center)
-                        .foregroundColor(.negativeActionButtonColor)
+                        .foregroundColor(.red)
                 }, footer: {
                     Text(Strings.accountDeletionFooter)
                         .font(.caption)
