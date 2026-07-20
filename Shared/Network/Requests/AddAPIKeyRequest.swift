@@ -15,7 +15,7 @@ extension HTTPRequest {
     static func addAPIKey(for project: Project, using apiToken: String) -> HTTPRequest? {
         let bundle = Bundle(for: AppData.self)
         let appName = bundle.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "nRF Edge Impulse for iOS"
-        let body = AddAPIKeyBody(name: appName.appending("_apiKey"), isDevelopmentKey: true, role: .ingestionDeployment)
+        let body = AddAPIKeyBody(name: appName.appending("_apiKey"), isDevelopmentKey: true, role: .admin)
         
         guard var httpRequest = HTTPRequest(host: .EdgeImpulse, path: "/v1/api/\(project.id)/apikeys"),
               let bodyData = try? JSONEncoder().encode(body) else { return nil }
