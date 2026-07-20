@@ -11,18 +11,30 @@ import SwiftUI
 
 struct DeploymentErrorView: View {
     
-    let error: Error
+    // MARK: Private
+    
+    private let error: Error
+    
+    // MARK: init
+    
+    init(_ error: Error) {
+        self.error = error
+    }
+    
+    // MARK: view
     
     var body: some View {
-        Section(header: Text("Error Description")) {
+        Section("Error Description") {
             #if os(macOS)
             Divider()
                 .padding(.horizontal)
             #endif
             
             // Align with the StageView items.
-            HStack(spacing: 2) {
-                Image(systemName: "info")
+            HStack(alignment: .firstTextBaseline) {
+                Image(systemName: "exclamationmark.octagon.fill")
+                    .renderingMode(.template)
+                    .foregroundStyle(Color.red)
                     .frame(width: 20, height: 20)
                 
                 Text(error.localizedDescription)
@@ -41,7 +53,7 @@ struct DeploymentErrorView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             FormIniOSListInMacOS {
-                DeploymentErrorView(error: NordicError.testError)
+                DeploymentErrorView(NordicError.testError)
             }
         }
         .previewLayout(.sizeThatFits)

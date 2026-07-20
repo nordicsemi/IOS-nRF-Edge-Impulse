@@ -13,13 +13,13 @@ import iOS_Common_Libraries
 
 struct DeploymentView: View {
     
-    // MARK: State
+    // MARK: Environment
     
     @EnvironmentObject var appData: AppData
     @EnvironmentObject var deviceData: DeviceData
     @EnvironmentObject var viewState: DeploymentViewState
     
-    // MARK: View
+    // MARK: view
     
     var body: some View {
         FormIniOSListInMacOS {
@@ -33,7 +33,7 @@ struct DeploymentView: View {
             }
             
             if let error = viewState.pipelineManager.error {
-                DeploymentErrorView(error: error)
+                DeploymentErrorView(error)
             }
             
             Section {
