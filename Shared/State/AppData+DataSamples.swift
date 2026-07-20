@@ -14,7 +14,14 @@ import iOS_Common_Libraries
 extension AppData {
     
     func requestDataSamples() {
-        guard let selectedProject = selectedProject, selectedProject != Project.Unselected else { return }
+        appLog.debug(#function)
+        guard let selectedProject, selectedProject != Project.Unselected else { return }
+        
+        guard haveProjectKeys(for: selectedProject) else {
+            requestProjectDevelopmentKeys()
+            return
+        }
+        
         for category in DataSample.Category.allCases {
             requestDataSamples(for: category)
         }
@@ -22,8 +29,8 @@ extension AppData {
     
     func requestNewSampleID(deliveryBlock: @escaping (StartSamplingResponse?, Error?) -> Void) {
         guard let sampleMessage = dataAquisitionViewState.newSampleMessage(category: selectedCategory),
-              let currentProject = selectedProject, let apiKey = apiToken,
-              let startRequest = HTTPRequest.startSampling(sampleMessage, project: currentProject, device: dataAquisitionViewState.selectedDevice, using: apiKey) else { return }
+              let selectedProject, let apiToken,
+              let startRequest = HTTPRequest.startSampling(sampleMessage, project: selectedProject, device: dataAquisitionViewState.selectedDevice, using: apiToken) else { return }
         
         Network.shared.perform(startRequest, responseType: StartSamplingResponse.self)
             .onUnauthorisedUserError(logout)
@@ -41,8 +48,10 @@ extension AppData {
             .store(in: &cancellables)
     }
     
-    func uploadSample<AnySubject: Subject>(headers: SamplingRequestFinishedResponse.Headers, body: Data,
-                                           named sampleName: String, for category: DataSample.Category, subject: AnySubject) where AnySubject.Output == String, AnySubject.Failure == DeviceRemoteHandler.Error {
+    func uploadSample<AnySubject: Subject>(
+        headers: SamplingRequestFinishedResponse.Headers, body: Data,
+        named sampleName: String, for category: DataSample.Category, subject: AnySubject) where AnySubject.Output == String, AnySubject.Failure == DeviceRemoteHandler.Error {
+            
         guard let uploadRequest = HTTPRequest.uploadSample(headers, body: body, name: sampleName, category: category) else { return }
         Network.shared.perform(uploadRequest)
             .onUnauthorisedUserError(logout)
@@ -68,13 +77,21 @@ extension AppData {
 
 private extension AppData {
     
+    // MARK: haveProjectKeys(for:)
+    
+    private func haveProjectKeys(for project: Project) -> Bool {
+        projectDevelopmentKeys[project] != nil
+    }
+    
     // MARK: requestDataSamples(for:)
     
     private func requestDataSamples(for category: DataSample.Category) {
-        guard let currentProject = selectedProject,
-              let projectApiKey = projectDevelopmentKeys[currentProject]?.apiKey,
-              let httpRequest = HTTPRequest.getSamples(for: currentProject, in: category, using: projectApiKey) else {
-            requestProjectDevelopmentKeys()
+        guard let selectedProject,
+              let projectApiKey = projectDevelopmentKeys[selectedProject]?.apiKey,
+              let httpRequest = HTTPRequest.getSamples(for: selectedProject, in: category, using: projectApiKey) else {
+            if let selectedProject {
+                appLog.error("Project Development Keys for \(selectedProject.name) are missing.")
+            }
             return
         }
         
@@ -90,8 +107,8 @@ private extension AppData {
     // MARK: requestProjectDevelopmentKeys()
     
     private func requestProjectDevelopmentKeys() {
-        guard let selectedProject, let token = apiToken,
-              let httpRequest = HTTPRequest.getProjectDevelopmentKeys(for: selectedProject, using: token) else {
+        guard let selectedProject, let apiToken,
+              let httpRequest = HTTPRequest.getProjectDevelopmentKeys(for: selectedProject, using: apiToken) else {
             // TODO: Error
             return
         }
@@ -115,13 +132,14 @@ private extension AppData {
     // MARK: apiKeyMissing
     
     private func apiKeyMissing() {
-        guard let selectedProject, let token = apiToken,
-              let addApiKeyRequest = HTTPRequest.addAPIKey(for: selectedProject, using: token),
-              let devKeysRequest = HTTPRequest.getProjectDevelopmentKeys(for: selectedProject, using: token) else {
+        guard let selectedProject, let apiToken,
+              let addApiKeyRequest = HTTPRequest.addAPIKey(for: selectedProject, using: apiToken),
+              let devKeysRequest = HTTPRequest.getProjectDevelopmentKeys(for: selectedProject, using: apiToken) else {
             // TODO: Error
             return
         }
         
+        appLog.debug(#function)
         Network.shared.perform(addApiKeyRequest, responseType: AddAPIKeyResponse.self)
             .receive(on: RunLoop.main)
             .onUnauthorisedUserError(logout)

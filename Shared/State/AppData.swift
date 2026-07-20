@@ -8,6 +8,7 @@
 import Foundation
 import KeychainSwift
 import Combine
+import os
 import iOS_Common_Libraries
 
 // MARK: - AppData
@@ -30,6 +31,7 @@ final class AppData: ObservableObject {
     
     @Published var selectedProject: Project? = Project.Unselected {
         didSet {
+            appLog.debug("selectedProject.didSet {}")
             selectedProjectDidChange()
         }
     }
@@ -50,6 +52,8 @@ final class AppData: ObservableObject {
     
     private lazy var keychain = KeychainSwift(keyPrefix: Constant.appName)
     internal var cancellables = Set<AnyCancellable>()
+    
+    internal lazy var appLog = NordicLog(self, subsystem: Logger.EdgeImpulseSubsystem)
     
     // MARK: init
     
